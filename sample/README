@@ -1,0 +1,23 @@
+To set up a Test.Base based test suite for your JSAN module, do the
+following steps:
+
+1) Install JS, JS::Test::Simple and JS::Test::Base from CPAN.
+
+2) Copy this directory from the Test.Base distribution to your project
+   and rename it `tests` (a JSAN standard)
+
+3) Rename `lib/Test/Sample.js` to your own local project test file. This
+   is where you put any code that overrides or extends Test.Base.js
+
+4) Run these commands:
+    > cp `js-cpan Test/Base/Makefile` .
+    > cp `js-cpan Test/Base/config.yaml` .
+
+5) Edit the config.yaml file to your own values. (optional)
+
+6) Write a bunch of test files in the t/ directory with names like
+   `foo.t.js` and `bar.t.js`.
+
+7) Run: `make clean all`
+
+8) Point your browser at `http://your.domain/Your-Project/tests/index.html`

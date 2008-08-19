@@ -1,0 +1,7 @@
+---
+name: Test-Base
+version: 0.13
+author:
+  - Ingy döt Net <ingy@cpan.org>
+abstract: Javascript Data Driven Test Framework
+license: artistic

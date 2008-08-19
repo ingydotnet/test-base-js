@@ -1,0 +1,23 @@
+---
+version: 0.13
+date:    Mon Mar  6 18:35:43 PST 2006
+changes:
+- Depend on the external Subclass module
+
+---
+version: 0.12
+date:    Sun Mar  5 18:33:40 PST 2006
+changes:
+- Created a sample installation for easy user setup
+
+---
+version: 0.11
+date:    Wed Mar  1 01:37:21 PST 2006
+changes:
+- Recent changes ported from Jemplate versions of modules.
+
+---
+version: 0.10
+date:    Sun Feb 26 21:23:02 PST 2006
+changes:
+- Maiden voyage
