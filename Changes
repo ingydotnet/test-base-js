@@ -1,8 +1,17 @@
 ---
+version: 0.14
+date:    Mon Aug 18 22:26:46 PDT 2008
+changes:
+- Make available as JS-Test-Base
+- Completely refactored layout
+- Pull dependencies using JS
+- Remove dependency on the external Sub_class module
+
+---
 version: 0.13
 date:    Mon Mar  6 18:35:43 PST 2006
 changes:
-- Depend on the external Subclass module
+- Depend on the external Sub_class module
 
 ---
 version: 0.12

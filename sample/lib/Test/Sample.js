@@ -39,5 +39,4 @@ __.upper_case = function(content, block) {
     return content.toUpperCase();
 }
 
-
 })('Test.Sample.Filter');
