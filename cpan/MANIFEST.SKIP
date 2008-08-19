@@ -1,0 +1,6 @@
+^tests/Makefile$
+^tests/README$
+^blib/
+^Makefile$
+^pm_to_blib$
+^MANIFEST\.SKIP$
