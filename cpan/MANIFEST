@@ -21,6 +21,7 @@ META.yml
 README
 t/test.t
 tests/config.yaml
+tests/index.html
 tests/lib/Test/Base.js
 tests/lib/Test/Builder.js
 tests/lib/Test/Harness.js

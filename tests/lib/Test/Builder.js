@@ -1,4 +1,4 @@
-// $Id: /mirror/openjsan/users/theory/Test.Simple/trunk/lib/Test/Builder.js 1942 2008-08-07T04:29:11.167550Z theory  $
+// $Id: /mirror/openjsan/users/theory/Test.Simple/trunk/lib/Test/Builder.js 22299 2008-08-07T04:29:11.167550Z theory  $
 
 /*global JSAN, Test, WScript, _global */
 
@@ -36,7 +36,7 @@ Test.Builder.globalScope = typeof JSAN != 'undefined'
       ? _global
       : this;
 
-Test.Builder.VERSION = '0.26';
+Test.Builder.VERSION = '0.27';
 Test.Builder.Instances = [];
 Test.Builder.lineEndingRx = /\r?\n|\r/g;
 Test.Builder.StringOps = {
