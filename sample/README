@@ -10,8 +10,8 @@ following steps:
    is where you put any code that overrides or extends Test.Base.js
 
 4) Run these commands:
-    > cp `js-cpan Test/Base/Makefile` .
-    > cp `js-cpan Test/Base/config.yaml` .
+    > cp -f `js-cpan Test/Base/Makefile` .
+    > cp -f `js-cpan Test/Base/config.yaml` .
 
 5) Edit the config.yaml file to your own values. (optional)
 
