@@ -47,8 +47,8 @@ index.html: $(INDEX_LOCAL) t/*.t.js
 	perl $(RENDERER) $(notdir $<) $(@:%.t.html=t/%.t.js) > $@
 
 lib/Test/Base.js: lib/Test
-	ln -s ../../../lib/Test/Base.js $@
-# 	cp -f `js-cpan Test.Base` $@
+	cp -f `js-cpan Test.Base` $@
+# 	ln -s ../../../lib/Test/Base.js $@
 
 lib/Test/Builder.js: lib/Test
 	cp -f `js-cpan Test.Builder` $@
