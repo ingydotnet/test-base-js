@@ -1,9 +1,56 @@
+// XXX Wrap this class.
+// (function() {
+
 Test.Base = function() {
     this.init.apply(this, arguments);
 }
-proto = Test.Base.prototype;
+var proto = Test.Base.prototype;
 
-Test.Base.VERSION = '0.14';
+Test.Base.VERSION = '0.15';
+
+Test.Base.newSubclass = function(name, base, isFinal) {
+    if (
+        !name || typeof(name) != 'string' ||
+        base && typeof(base) != 'string'
+    ) throw "Usage: Test.Base.newSubclass('subclass.name' [, 'baseclass.name'])";
+    if (!base)
+        base = 'Test.Base';
+
+    var parts = name.split('.');
+    var subclass = window;
+    for (var i = 0; i < parts.length; i++) {
+        if (! subclass[parts[i]])
+            subclass[parts[i]] = function() {
+                try { this.init() } catch(e) {throw(e)}
+            };
+        subclass = subclass[parts[i]];
+    }
+
+    var baseclass = eval('new ' + base + '()');
+    subclass.prototype = baseclass;
+    subclass.prototype.className = name;
+    subclass.prototype.baseClassName = base;
+
+    if (! isFinal) {
+        subclass.prototype.init = function() {
+            eval(base).prototype.init.call(this);
+            this.block_class = name + '.Block';
+        }
+
+        var block_proto =
+            Test.Base.newSubclass(name + '.Block', base + '.Block', true);
+
+        block_proto.init = function() {
+            eval(base + '.Block').prototype.init.call(this);
+            this.filter_object = eval('new ' + name + '.Filter()');
+        }
+
+        Test.Base.newSubclass(name + '.Filter', base + '.Filter', true);
+    }
+
+    subclass.prototype.classname = name;
+    return subclass.prototype;
+}
 
 proto.init = function() {
     this.builder = Test.Builder.instance();
@@ -15,6 +62,7 @@ proto.init = function() {
     this.state.spec_content = null;
     this.state.filters_map = {};
     this.state.blocks = [];
+    this.section_delim = '---';
 }
 
 proto.spec = function(url) {
@@ -41,6 +89,7 @@ proto.run_is = function(x, y) {
     }
 }
 
+// TODO Add more proxy functions for common builder stuffs
 proto.plan = function(number) {
     var cmds = {tests: number};
     return this.builder.plan(cmds);
@@ -52,6 +101,10 @@ proto.pass = function(name) {
 
 proto.fail = function(name) {
     return this.builder.ok(false, name);
+}
+
+proto.ok = function(test, desc) {
+    this.builder.ok(test, desc);
 }
 
 proto.is = function (got, expect, desc) {
@@ -68,6 +121,14 @@ proto.like = function (val, regex, desc) {
 
 proto.unlike = function (val, regex, desc) {
     return this.builder.unlike(val, regex, desc);
+};
+
+proto.skip = function(why) {
+    return this.builder.skip(why);
+};
+
+proto.skipAll = function(why) {
+    return this.builder.skipAll(why);
 };
 
 proto.compile = function() {
@@ -113,8 +174,8 @@ proto.make_block = function(hunk) {
     block.name = name.replace(/^\s*(.*?)\s*$/, '$1');
 
     var chunks = [];
-    while (hunk.indexOf('\n--- ') >= 0) {
-        index = hunk.indexOf('\n--- ') + 1;
+    while (hunk.indexOf('\n' + this.section_delim + ' ') >= 0) {
+        index = hunk.indexOf('\n' + this.section_delim + ' ') + 1;
         var chunk = hunk.substr(0, index);
         hunk = hunk.substr(index);
         chunks.push(chunk);
@@ -127,7 +188,12 @@ proto.make_block = function(hunk) {
         if (index < 0) throw('xxx1');
         var line1 = chunk.substr(0, index);
         var section_data = chunk.substr(index + 1);
-        line1 = line1.replace(/^---\s*/, '');
+        var re = new RegExp(
+            '^' +
+            this.section_delim.replace(/([\+\*])/g, '\\$1') +
+            '\\s+'
+        );
+        line1 = line1.replace(re, '');
         if (! line1.length) throw('xxx2');
         var section_name = '';
         var section_filters = [];
@@ -201,7 +267,13 @@ proto.filter_section = function(section, filters) {
     var data = this.data[section];
     for (var i = 0; i < filters.length; i++) {
         var filter = filters[i];
-        if (typeof window[filter] == 'function')
+        if (typeof filter == 'function') {
+            data = filter.call(this, data, this);
+        }
+        else if (
+            typeof window[filter] == 'function' &&
+            filter != 'eval'
+        )
             data = (window[filter]).call(this, data, this);
         else if (typeof this.filter_object[filter] == 'function')
             data = (this.filter_object[filter]).call(this, data, this);
@@ -241,6 +313,12 @@ proto.evaluate = function(content, block) {
     return object;
 }
 
+proto.eval = function(content, block) {
+    var javascript = content;
+    var object = eval(content);
+    return object;
+}
+
 //------------------------------------------------------------------------------
 // Debugging Support
 //------------------------------------------------------------------------------
@@ -249,10 +327,11 @@ function XXX(msg) {
     //if (! confirm(arguments.join('\n')))
     if (! confirm(msg))
         throw("terminated...");
+    return msg;
 }
 
 function JJJ(obj) {
-    XXX(JSON.stringify(obj));
+    return XXX(JSON.stringify(obj));
 }
 
 //------------------------------------------------------------------------------

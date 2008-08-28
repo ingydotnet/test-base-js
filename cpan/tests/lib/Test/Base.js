@@ -3,7 +3,7 @@ Test.Base = function() {
 }
 proto = Test.Base.prototype;
 
-Test.Base.VERSION = '0.14';
+Test.Base.VERSION = '0.16';
 
 proto.init = function() {
     this.builder = Test.Builder.instance();
