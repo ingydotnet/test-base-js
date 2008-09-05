@@ -1,4 +1,10 @@
 ---
+version: 0.17
+date:    
+changes:
+- Add a wrapper function to Test/Base.js
+
+---
 version: 0.16
 date:    Thu Aug 28 00:43:35 PDT 2008
 changes:
